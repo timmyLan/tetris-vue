@@ -1,5 +1,5 @@
 <template>
-    <div class="shape" :style="positionObject" @click="changeBlockArrs">
+    <div class="shape" :style="positionObject">
       <div v-for="(blockArr,index) of blockArrs">
         <div v-for="(block,innerIndex) of blockArr" v-if="block">
           <Block
@@ -51,10 +51,10 @@ export default {
     }
   },
   methods: {
-    changeBlockArrs: function (){
-      const blockArrs = this.blockArrs.reverse();
-      this.blockArrs = Object.keys(blockArrs[0]).map(function(c) {
-        return blockArrs.map(function(r) { return r[c]; });
+    transformBlockArrs: function () {
+      const revBlockArrs = this.blockArrs.reverse();
+      return Object.keys(revBlockArrs[0]).map(function(c) {
+        return revBlockArrs.map(function(r) { return r[c]; });
       });
     }
   },
@@ -70,7 +70,9 @@ export default {
           break;
         //up
         case 38:
-          this.changeBlockArrs();
+          if((this.left + this.height) * this.GLOBAL.offset * this.fontSize <= this.parentRect.width && (this.top + this.width) * this.GLOBAL.offset * this.fontSize <= this.parentRect.height){
+            this.blockArrs = this.transformBlockArrs();
+          }
           this.$emit('removeKeyCode');
           break;
         //right
