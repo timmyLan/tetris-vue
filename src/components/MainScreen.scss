@@ -1,0 +1,21 @@
+$block-width: 2em;
+$block-border: .5em;
+.canvas {
+  position: relative;
+  margin: 0 auto;
+  background: #aaa;
+  width: 11 * ($block-border * 2 + $block-width);
+  height: 13 * ($block-border * 2 + $block-width);
+  margin-top: 2em;
+  .shape {
+    position: absolute;
+    .block {
+      position: absolute;
+      width: $block-width;
+      height: $block-width;
+      border: $block-border solid red;
+      background: #ccc;
+      text-align: center;
+    }
+  }
+}
