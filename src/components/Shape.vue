@@ -22,8 +22,6 @@ export default {
     arr: Array,
     active: Boolean,
     area: Array,
-    parentRect:Object,
-    fontSize:Number,
     initLeft:Number,
     initTop:Number,
     count: Number
@@ -71,11 +69,9 @@ export default {
           }
           const blockArrs = this.blockArrs;
             for(let i = 0;i < blockArrs.length;i++){
-              if(!canMove) break;
               for(let j = 0;j< blockArrs[0].length;j++){
                   if(this.area[i+this.top][j+this.left-1] == 1){
-                      canMove = false;
-                      break;
+                      return canMove = false;
                   }
               }
             }
@@ -89,11 +85,9 @@ export default {
           }
           const blockArrs = this.blockArrs;
             for(let i = 0;i < blockArrs.length;i++){
-              if(!canMove) break;
               for(let j = 0;j< blockArrs[0].length;j++){
                   if(this.area[i+this.top][j+this.left+1] == 1){
-                      canMove = false;
-                      break;
+                      return canMove = false;
                   }
               }
             }
@@ -101,19 +95,39 @@ export default {
           canMove = this.left + this.width + 1 <= this.area[0].length;
         }
       }else if(direction === 'down'){
+        const top = this.top;
+        const left = this.left;
         if(this.count){
-          if(this.top + this.height + 1 > this.area.length){
+          if(top + this.height + 1 > this.area.length){
             return canMove = false;
           }
-          for(let i = 0;i < this.blockArrs.length;i++){
-            for(let j = 0;j< this.blockArrs[0].length;j++){
-                if(this.area[i+this.top+1][j+this.left] === 1){
+          const blockArrs = this.blockArrs;
+          for(let i = 0;i < blockArrs.length;i++){
+            for(let j = 0;j< blockArrs[0].length;j++){
+                if(this.area[i+top+1][j+left] === 1){
                     return canMove = false;
                 }
             }
           }
         }else{
           canMove = this.top + this.height + 1 <= this.area.length;
+        }
+      }else if(direction === 'up'){
+        if(this.count){
+          if(this.left + this.height > this.area[0].length || this.top + this.width > this.area.length){
+            return canMove = false;
+          }else{
+            const blockArrs = this.blockArrs;
+            for(let i = 0;i < blockArrs.length;i++){
+              for(let j = 0;j< blockArrs[0].length;j++){
+                  if(this.area[i+this.left][j+this.top+1] === 1 || this.area[i+this.left+1][j+this.top] === 1 || this.area[i+this.left][j+this.top-1] == 1){
+                      return canMove = false;
+                  }
+              }
+            }
+          }
+        }else{
+          return canMove =  this.left + this.height <= this.area[0].length && this.top + this.width <= this.area.length;
         }
       }else{
         console.log('error direction');
@@ -152,7 +166,7 @@ export default {
           break;
         //up
         case 38:
-          if((this.left + this.height) * this.GLOBAL.offset * this.fontSize <= this.parentRect.width && (this.top + this.width) * this.GLOBAL.offset * this.fontSize <= this.parentRect.height){
+          if(this.canMove('up')){
             this.blockArrs = this.transformBlockArrs();
           }
           this.$emit('removeKeyCode');
@@ -161,13 +175,6 @@ export default {
         case 39:
           if(this.canMove('right')){
             this.left += 1;
-          }
-          this.$emit('removeKeyCode');
-          break;
-        //down
-        case 40:
-          if(this.canMove('down')){
-            this.top += 1;
           }
           this.$emit('removeKeyCode');
           break;

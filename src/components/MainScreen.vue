@@ -11,9 +11,7 @@
       :arr="arrObj.arr"
       :active="arrObj.active"
       :initLeft.sync="arrObj.left"
-      :initTop.sync="arrObj.top"
-      :parentRect="rect"
-      :fontSize="fontSize"/>
+      :initTop.sync="arrObj.top"/>
     </div>
   </div>
 </template>
@@ -91,7 +89,6 @@ export default {
           }
         }
       }
-      console.log('this.area',this.area)
     }
   }
 }
