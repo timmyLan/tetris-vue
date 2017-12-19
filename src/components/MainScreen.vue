@@ -8,7 +8,7 @@
       v-on:upDateArea="upDateArea"
       :area="area"
       :count="count"
-      :arr="arrObj.arr"
+      :arr.sync="arrObj.arr"
       :active="arrObj.active"
       :initLeft.sync="arrObj.left"
       :initTop.sync="arrObj.top"/>
@@ -28,10 +28,10 @@ export default {
     return {
       keyCode: null,
       arrs: [],
-      area:[],
-      fontSize:0,
-      rect:{},
-      count:0
+      area: [],
+      fontSize: 0,
+      rect: {},
+      count: 0
     }
   },
   created: function () {
@@ -66,7 +66,8 @@ export default {
     },
     init: function () {
       const random = Math.floor(Math.random() * this.GLOBAL.arrs.length);
-      const arr = this.GLOBAL.arrs[random];
+      // const arr = this.GLOBAL.arrs[random];
+      const arr = [[1],[1],[1],[1]];
       const arrObj = {
         active: true,
         arr: arr,

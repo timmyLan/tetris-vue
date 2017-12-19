@@ -22,8 +22,8 @@ export default {
     arr: Array,
     active: Boolean,
     area: Array,
-    initLeft:Number,
-    initTop:Number,
+    initLeft: Number,
+    initTop: Number,
     count: Number
   },
   data: function () {
@@ -70,13 +70,15 @@ export default {
           const blockArrs = this.blockArrs;
             for(let i = 0;i < blockArrs.length;i++){
               for(let j = 0;j< blockArrs[0].length;j++){
-                  if(this.area[i+this.top][j+this.left-1] == 1){
+                if(blockArrs[i][j] === 1){
+                  if(this.area[i+this.top][j+this.left-1] === 1){
                       return canMove = false;
                   }
+                }
               }
             }
         }else{
-          canMove = this.left - 1 >= 0;
+          return canMove = this.left - 1 >= 0;
         }
       }else if(direction === 'right'){
         if(this.count){
@@ -86,46 +88,50 @@ export default {
           const blockArrs = this.blockArrs;
             for(let i = 0;i < blockArrs.length;i++){
               for(let j = 0;j< blockArrs[0].length;j++){
-                  if(this.area[i+this.top][j+this.left+1] == 1){
+                if(blockArrs[i][j] === 1){
+                  if(this.area[i+this.top][j+this.left+1] === 1){
                       return canMove = false;
                   }
+                }
               }
             }
         }else{
-          canMove = this.left + this.width + 1 <= this.area[0].length;
+          return canMove = this.left + this.width + 1 <= this.area[0].length;
         }
       }else if(direction === 'down'){
-        const top = this.top;
-        const left = this.left;
         if(this.count){
-          if(top + this.height + 1 > this.area.length){
+          if(this.top + this.height + 1 > this.area.length){
             return canMove = false;
           }
           const blockArrs = this.blockArrs;
           for(let i = 0;i < blockArrs.length;i++){
             for(let j = 0;j< blockArrs[0].length;j++){
-                if(this.area[i+top+1][j+left] === 1){
+              if(blockArrs[i][j] === 1){
+                if(this.area[i+this.top+1][j+this.left] === 1){
                     return canMove = false;
                 }
+              }
             }
           }
         }else{
-          canMove = this.top + this.height + 1 <= this.area.length;
+          return canMove = this.top + this.height + 1 <= this.area.length;
         }
       }else if(direction === 'up'){
         if(this.count){
           if(this.left + this.height > this.area[0].length || this.top + this.width > this.area.length){
             return canMove = false;
-          }else{
-            const blockArrs = this.blockArrs;
-            for(let i = 0;i < blockArrs.length;i++){
-              for(let j = 0;j< blockArrs[0].length;j++){
-                  if(this.area[i+this.left][j+this.top+1] === 1 || this.area[i+this.left+1][j+this.top] === 1 || this.area[i+this.left][j+this.top-1] == 1){
-                      return canMove = false;
-                  }
-              }
-            }
           }
+          // }else{
+          //   for(let i = 0;i < this.blockArrs.reverse().length;i++){
+          //     for(let j = 0;j< this.blockArrs.reverse()[0].length;j++){
+          //       if(this.blockArrs.reverse()[i][j] === 1){
+          //         if(this.area[i+this.top][j+this.left] === 1){
+          //             return canMove = false;
+          //         }
+          //       }
+          //     }
+          //   }
+          // }
         }else{
           return canMove =  this.left + this.height <= this.area[0].length && this.top + this.width <= this.area.length;
         }
@@ -135,22 +141,25 @@ export default {
       return canMove;
     },
     fallDown: function () {
-      if(this.isActive){
-          setTimeout(function loop() {
-          if(this.canMove('down')){
-            this.top++;
-            setTimeout(loop.bind(this), 600);
+      setTimeout(function loop() {
+        if(this.canMove('down')){
+          this.top++;
+          setTimeout(loop.bind(this), 600);
+        }else{
+          console.log('can not fallDown!');
+          this.isActive = false;
+          clearTimeout(this.fallDown);
+          this.$emit('update:initLeft', this.left);
+          this.$emit('update:initTop', this.top);
+          this.$emit('update:arr', this.blockArrs);
+          this.$emit('upDateArea');
+          if(this.top === 0){
+            console.log('Game Over !');
           }else{
-            console.log('can not fallDown!');
-            this.isActive = false;
-            clearTimeout(this.fallDown);
-            this.$emit('update:initLeft', this.left);
-            this.$emit('update:initTop', this.top);
-            this.$emit('upDateArea');
-            this.$emit('init');
+            // this.$emit('init');
           }
-        }.bind(this), 600);
-      }
+        }
+      }.bind(this), 600);
     }
   },
   watch: {
