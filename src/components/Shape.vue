@@ -1,5 +1,6 @@
 <template>
     <div class="shape" :style="positionObject">
+      <!--遍历俄罗斯方块数组为1的则渲染成block-->
       <div v-for="(blockArr,index) of blockArrs">
         <div v-for="(block,innerIndex) of blockArr" v-if="block">
           <Block
@@ -52,6 +53,9 @@ export default {
     }
   },
   methods: {
+    /**
+     * 俄罗斯方块形变
+     */
     transformBlockArrs: function () {
       const blockArrs = this.blockArrs;
       let newArr = [];
@@ -64,6 +68,13 @@ export default {
       }
       return newArr;
     },
+    /**
+     * 判断俄罗斯方块能否移动
+     * 遍历俄罗斯方块 i为列 j为行
+     * 俄罗斯方块 高度为 i+top 宽度为 j+left
+     * @param  {string} direction 移动方向(对应方向键的上下左右)
+     * @return {boolean}   canmove  能否移动
+     */
     canMove: function (direction) {
       let canMove = true;
       if(direction === 'left'){
@@ -71,15 +82,15 @@ export default {
           return canMove = false;
         }
         const blockArrs = this.blockArrs;
-          for(let i = 0;i < blockArrs.length;i++){
-            for(let j = 0;j < blockArrs[0].length;j++){
-              if(blockArrs[i][j] === 1){
-                if(this.area[i+this.top][j+this.left-1] === 1){
-                    return canMove = false;
-                }
+        for(let i = 0;i < blockArrs.length;i++){
+          for(let j = 0;j < blockArrs[0].length;j++){
+            if(blockArrs[i][j] === 1){
+              if(this.area[i+this.top][j+this.left-1] === 1){
+                  return canMove = false;
               }
             }
           }
+        }
       }else if(direction === 'right'){
         if(this.left + this.width + 1 > this.area[0].length){
           return canMove = false;
@@ -127,6 +138,12 @@ export default {
       }
       return canMove;
     },
+    /**
+     * 掉落函数
+     * 每600毫秒方块高度+1
+     * 当前方块高度为0则gameOver
+     * 否则将创建新的方块
+     */
     fallDown: function () {
       setTimeout(function loop() {
         if(this.canMove('down')){
@@ -151,6 +168,11 @@ export default {
     }
   },
   watch: {
+    /**
+     * 监听keyCode
+     * 判断上下左右
+     * 触发keydown后将keyCode置为空值,可重复触发
+     */
     keyCode: function (newKeyCode){
       if(this.active){
         switch (newKeyCode) {

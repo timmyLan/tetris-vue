@@ -1,6 +1,6 @@
 # tetris-vue
 
-> tetris create by vue
+> vue编写俄罗斯方块
 
 ## Build Setup
 
@@ -18,4 +18,7 @@ npm run build
 npm run build --report
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## Reference
+
+* [vue官网](https://cn.vuejs.org)
+* 用es6写的[轻松10步用es6写出俄罗斯方块](https://github.com/timmyLan/tetris)

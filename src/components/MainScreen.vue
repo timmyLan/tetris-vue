@@ -1,5 +1,6 @@
 <template>
   <div class="canvas">
+    <!--通过判断active属性,显示与否-->
     <Shape
       :key="count"
       v-if="arrObj.active"
@@ -13,6 +14,7 @@
       :active.sync="arrObj.active"
       :initLeft.sync="arrObj.left"
       :initTop.sync="arrObj.top"/>
+    <!--遍历画布为1的则渲染成block-->
     <div v-for="(blockArr,index) of area">
       <div v-for="(block,innerIndex) of blockArr" v-if="block">
         <Block
@@ -43,10 +45,13 @@ export default {
     }
   },
   created: function () {
-    window.addEventListener('keydown',this.handleKeyUp);
+    window.addEventListener('keydown',this.handlekeyDown);
     this.init();
   },
   mounted: function(){
+    /**
+     * 通过计算主屏幕大小得出画布区域
+     */
     const rect = this.$el.getBoundingClientRect();
     const {width,height} = rect;
     const fontSize = parseFloat(window.getComputedStyle(this.$el, null).getPropertyValue('font-size'));
@@ -62,14 +67,23 @@ export default {
     this.area = arr;
   },
   methods: {
-    handleKeyUp: function (event) {
+    /**
+     * 监听键盘事件
+     */
+    handlekeyDown: function (event) {
       if(event){
         this.keyCode = event.keyCode;
       }
     },
+    /**
+     * 重置keyCode
+     */
     handleRemoveKeyCode: function () {
       this.keyCode = null;
     },
+    /**
+     * 初始化俄罗斯方块
+     */
     init: function () {
       const random = Math.floor(Math.random() * this.GLOBAL.arrs.length);
       const arr = this.GLOBAL.arrs[random];
@@ -82,6 +96,10 @@ export default {
       this.arrObj = arrObj;
       this.count ++;
     },
+    /**
+     * 跟新画布可移动区域
+     * 占据方块的下标用1填充
+     */
     upDateArea: function() {
       let {arr,left,top} = this.arrObj;
       for(let i = 0;i < arr.length;i++){
@@ -92,6 +110,11 @@ export default {
         }
       }
     },
+    /**
+     * 消除方块
+     * 判断画布中达到消除条件的行
+     * 达到消除条件以上行数向下一行掉落
+     */
     eliminate: function () {
       const area = this.area;
       const eliminateColumn = [];
