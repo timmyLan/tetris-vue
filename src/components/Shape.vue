@@ -55,10 +55,16 @@ export default {
   },
   methods: {
     transformBlockArrs: function () {
-      const revBlockArrs = this.blockArrs.reverse();
-      return Object.keys(revBlockArrs[0]).map(function(c) {
-        return revBlockArrs.map(function(r) { return r[c]; });
-      });
+      const blockArrs = this.blockArrs;
+      let newArr = [];
+      for (let i = 0; i < blockArrs[0].length; i++) {
+          let temArr = [];
+          for (let j = blockArrs.length - 1; j >= 0; j--) {
+              temArr.push(blockArrs[j][i]);
+          }
+          newArr.push(temArr);
+      }
+      return newArr;
     },
     canMove: function (direction) {
       let canMove = true;
@@ -69,7 +75,7 @@ export default {
           }
           const blockArrs = this.blockArrs;
             for(let i = 0;i < blockArrs.length;i++){
-              for(let j = 0;j< blockArrs[0].length;j++){
+              for(let j = 0;j < blockArrs[0].length;j++){
                 if(blockArrs[i][j] === 1){
                   if(this.area[i+this.top][j+this.left-1] === 1){
                       return canMove = false;
@@ -87,7 +93,7 @@ export default {
           }
           const blockArrs = this.blockArrs;
             for(let i = 0;i < blockArrs.length;i++){
-              for(let j = 0;j< blockArrs[0].length;j++){
+              for(let j = 0;j < blockArrs[0].length;j++){
                 if(blockArrs[i][j] === 1){
                   if(this.area[i+this.top][j+this.left+1] === 1){
                       return canMove = false;
@@ -105,7 +111,7 @@ export default {
           }
           const blockArrs = this.blockArrs;
           for(let i = 0;i < blockArrs.length;i++){
-            for(let j = 0;j< blockArrs[0].length;j++){
+            for(let j = 0;j < blockArrs[0].length;j++){
               if(blockArrs[i][j] === 1){
                 if(this.area[i+this.top+1][j+this.left] === 1){
                     return canMove = false;
@@ -120,18 +126,18 @@ export default {
         if(this.count){
           if(this.left + this.height > this.area[0].length || this.top + this.width > this.area.length){
             return canMove = false;
+          }else{
+            const revBlockArrs = this.transformBlockArrs();
+            for(let i = 0;i < revBlockArrs.length;i++){
+              for(let j = 0;j< revBlockArrs[0].length;j++){
+                if(revBlockArrs[i][j] === 1){
+                  if(this.area[i+this.top][j+this.left] === 1){
+                      return canMove = false;
+                  }
+                }
+              }
+            }
           }
-          // }else{
-          //   for(let i = 0;i < this.blockArrs.reverse().length;i++){
-          //     for(let j = 0;j< this.blockArrs.reverse()[0].length;j++){
-          //       if(this.blockArrs.reverse()[i][j] === 1){
-          //         if(this.area[i+this.top][j+this.left] === 1){
-          //             return canMove = false;
-          //         }
-          //       }
-          //     }
-          //   }
-          // }
         }else{
           return canMove =  this.left + this.height <= this.area[0].length && this.top + this.width <= this.area.length;
         }
@@ -156,7 +162,7 @@ export default {
           if(this.top === 0){
             console.log('Game Over !');
           }else{
-            // this.$emit('init');
+            this.$emit('init');
           }
         }
       }.bind(this), 600);

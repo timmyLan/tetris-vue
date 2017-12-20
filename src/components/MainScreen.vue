@@ -66,8 +66,7 @@ export default {
     },
     init: function () {
       const random = Math.floor(Math.random() * this.GLOBAL.arrs.length);
-      // const arr = this.GLOBAL.arrs[random];
-      const arr = [[1],[1],[1],[1]];
+      const arr = this.GLOBAL.arrs[random];
       const arrObj = {
         active: true,
         arr: arr,
