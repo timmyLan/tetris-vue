@@ -1,36 +1,44 @@
 <template>
   <div class="canvas">
-    <div v-for="arrObj of arrs">
-      <Shape
-      :keyCode="keyCode"
+    <Shape
+      :key="count"
+      v-if="arrObj.active"
       v-on:removeKeyCode="handleRemoveKeyCode"
       v-on:init="init"
       v-on:upDateArea="upDateArea"
+      v-on:eliminate ="eliminate"
+      :keyCode="keyCode"
       :area="area"
-      :count="count"
       :arr.sync="arrObj.arr"
-      :active="arrObj.active"
+      :active.sync="arrObj.active"
       :initLeft.sync="arrObj.left"
       :initTop.sync="arrObj.top"/>
+    <div v-for="(blockArr,index) of area">
+      <div v-for="(block,innerIndex) of blockArr" v-if="block">
+        <Block
+         :key="`${index}-${innerIndex}`"
+         :left="innerIndex"
+         :top="index"/>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import Shape from './Shape';
+import Block from './Block';
 import './MainScreen.scss';
 export default {
   name: 'MainScreen',
   components: {
-    Shape
+    Shape,
+    Block
   },
   data: function(){
     return {
       keyCode: null,
-      arrs: [],
       area: [],
-      fontSize: 0,
-      rect: {},
+      arrObj: {},
       count: 0
     }
   },
@@ -52,8 +60,6 @@ export default {
       }
     }
     this.area = arr;
-    this.rect = {width,height};
-    this.fontSize = fontSize;
   },
   methods: {
     handleKeyUp: function (event) {
@@ -73,19 +79,38 @@ export default {
         left: 0,
         top: 0
       };
-      const length = this.arrs.length;
-      if(length){
-        this.arrs[length -1].active = false;
-        this.count ++;
-      }
-      this.arrs.push(arrObj);
+      this.arrObj = arrObj;
+      this.count ++;
     },
     upDateArea: function() {
-      let {arr,left,top} = this.arrs[this.count];
+      let {arr,left,top} = this.arrObj;
       for(let i = 0;i < arr.length;i++){
         for(let j = 0;j< arr[0].length;j++){
           if(arr[i][j] === 1){
             this.area[i+top][j+left] = 1;
+          }
+        }
+      }
+    },
+    eliminate: function () {
+      const area = this.area;
+      const eliminateColumn = [];
+      const length = area[0].length;
+      for(let i = 0; i < area.length; i++){
+        let count = 0;
+        for(let j = 0; j < length; j++){
+          if(area[i][j] === 1){
+            count++;
+          }
+        }
+        if(count === length){
+          eliminateColumn.push(i);
+        }
+      }
+      if(eliminateColumn.length){
+        for(let i = 0 ; i < eliminateColumn.length; i++){
+          for(let j = 0; j < eliminateColumn[i] - 1; j++){
+            area[eliminateColumn[i] - j] = area[eliminateColumn[i] - j - 1];
           }
         }
       }

@@ -9,13 +9,13 @@ $block-border: .5em;
   margin-top: 2em;
   .shape {
     position: absolute;
-    .block {
-      position: absolute;
-      width: $block-width;
-      height: $block-width;
-      border: $block-border solid red;
-      background: #ccc;
-      text-align: center;
-    }
+  }
+  .block {
+    position: absolute;
+    width: $block-width;
+    height: $block-width;
+    border: $block-border solid red;
+    background: #ccc;
+    text-align: center;
   }
 }
