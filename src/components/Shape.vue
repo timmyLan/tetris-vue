@@ -141,7 +141,7 @@ export default {
           this.$emit('upDateArea');
           this.$emit('eliminate');
           if(this.top === 0){
-            console.log('Game Over !');
+            window.alert('Game Over !');
           }else{
             this.$emit('init');
           }
@@ -172,6 +172,13 @@ export default {
         case 39:
           if(this.canMove('right')){
             this.left += 1;
+          }
+          this.$emit('removeKeyCode');
+          break;
+        //down
+        case 40:
+          if(this.canMove('down')){
+            this.top += 1;
           }
           this.$emit('removeKeyCode');
           break;
